@@ -1,2 +1,3 @@
-/bin
-/Software
+bin/
+Software/
+*bin
