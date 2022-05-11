@@ -1,39 +1,31 @@
-
 [org 0x7c00]
-    mov [BOOT_DRIVE], dl
 
     mov bp, 0x8000 ;set stack base
     mov sp, bp     ;set stack top
 
-    ;load 5 sectors (0x0000:0x9000; ES:BX) from boot disk
-    mov bx, 0x9000 
-    mov dh,5
-    mov dl, [BOOT_DRIVE]
-    call disk_load
-
-    ;print first loaded word (0xdada)
-    mov dx, [0x9000]
-    call print_hexadecimal
-
-    ;print first word from second sector (0xface)
-    mov dx, [0x9000 + 512]
-    call print_hexadecimal
+    call start_protected_mode 
 
     jmp $ 
 
+; include GDT
+%include "GDT.asm"
+
 ; include libs
-%include "print.asm"
-%include "disk.asm"
+%include "asmlibs/print.asm"
+%include "asmlibs/ProtectedMode.asm"
 
+[bits 32]
+BEGIN_PROTECTED_MODE:
 
-;global variables
-BOOT_DRIVE:
-    db 0
+    mov ebx, MSG_PROT_MODE
+    call print_string
+    jmp $ ; Hang
+
+MSG_PROT_MODE:
+     db " Successfully landed in 32 - bit Protected Mode " , 0
+
 
 ;bootsector padding
 times 510-($-$$) db 0
 dw 0xaa55
 
-;disk sector indicators
-times 256 dw 0xdada
-times 256 dw 0xface
