@@ -1,4 +1,4 @@
 bin/
-Software/
-Scripts/
+build/
+*o
 *bin

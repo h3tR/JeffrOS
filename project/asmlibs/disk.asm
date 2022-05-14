@@ -11,11 +11,13 @@ disk_load:
     int 0x13
 
     jc disk_error
+    pop dx
+    ret
 
 
 disk_error:
     mov bx, DISK_ERROR_MSG
-    call print_string
+    call print_stringrm
     jmp $
 
 DISK_ERROR_MSG:

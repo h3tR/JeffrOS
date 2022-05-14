@@ -27,4 +27,17 @@ print_string:
     popa
     ret
 
+; prints string from bx in real mode
+print_stringrm:
+    mov ax, 0x0e
+
+    mov al, [bx]
+    cmp al, 0x00
+    je .exit
+
+    inc bx
+    jmp print_stringrm
+.exit:
+    ret
+
 
