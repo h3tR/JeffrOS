@@ -1,6 +1,6 @@
-void main(){
+#include "../drivers/VGA.h"
 
-    char* video_memory = (char*) 0xb8000;
-    *video_memory = '|';
-    
+void main(){
+  clearScreen();
+  printString("<3 Jeffrey",0,0);
 }
