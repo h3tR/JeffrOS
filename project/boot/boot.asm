@@ -36,7 +36,6 @@ load_kernel:
 
 [bits 32]
 BEGIN_PROTECTED_MODE:
-
     call KERNEL_OFFSET
 
     jmp $ ; Hang

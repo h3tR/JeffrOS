@@ -1,6 +1,6 @@
 #ifndef PORT_IO
 #define PORT_IO
-#include "../utility/typedefs.h"
+#include <stdint-gcc.h>
 
 uint8_t b_in(uint16_t port);
 void b_out(uint16_t port, uint8_t data);

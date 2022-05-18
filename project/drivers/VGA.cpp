@@ -1,4 +1,6 @@
 #define VIDEO_ADDRESS 0xb8000
+#define VIDEO_ADDRESS_GRAPHICS 0xa0000
+
 #define MAX_ROWS 25
 #define MAX_COLS 80
 // Default scheme attribute byte (white on black)
@@ -8,16 +10,19 @@
 #define REG_SCREEN_CTRL 0x3D4
 #define REG_SCREEN_DATA 0x3D5
 
-#include "../utility/typedefs.h"
+#include <stdint-gcc.h>
 #include "../drivers/portIO.h"
 
-void setDebugChar(uint8_t c){
-    uint8_t *vidmem = (uint8_t*) 0xb8000;
-    *vidmem = c;
+//TODO supposed to be part of the upcoming VA graphics library
+void putpixel(int pos_x, int pos_y, unsigned char VGA_COLOR)
+{
+    unsigned char* location = (unsigned char*)VIDEO_ADDRESS_GRAPHICS + 320 * pos_y + pos_x;
+    *location = VGA_COLOR;
 }
 
 uint16_t cursor = 0;
 
+//sets cursor to memory offset
 void setCursor(uint16_t offset){
     if(offset>=0&&offset<2000){
         b_out(REG_SCREEN_CTRL, 0x0f);
@@ -26,15 +31,34 @@ void setCursor(uint16_t offset){
         b_out(REG_SCREEN_DATA, (uint8_t)((offset >> 8) & 0xff));
         cursor = offset;
     }
-    
     return;
 }
 
+/*
+returns an array containing:
+    the current column at index 0 
+    the current row at index 1
+*/
+void getCursor(int dat[2]){
+    int RealCursor = cursor/2;
+    int col = RealCursor%MAX_COLS;
+    int row = (RealCursor-col)/MAX_COLS;
+    dat[0] = col;
+    dat[1] = row;
+    return;
+}
+
+//sets cursor to given position
 void setCursor(int col, int row) {
     setCursor(col+row*MAX_COLS);
     return;
 }
 
+/*prints out a single character at given position 
+    (optional: defaults to cursor)
+        and with given VGA attribute 
+    (optional: defaults to 0x0f = white text on black background)
+ */
 void printChar(char character, int col,int row, char attribute){
     //video memory pointer
     uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
@@ -44,7 +68,9 @@ void printChar(char character, int col,int row, char attribute){
        offset = cursor;
     }
     if(character ==  '\n'){
-        setCursor(79,offset/(2*MAX_COLS));
+        int cursorData[2];
+        getCursor(cursorData);
+        setCursor(0,cursorData[1]+1);
         offset = cursor;
     } else {
        *(vidmem+offset*2) = character;
@@ -60,6 +86,11 @@ void printChar(char character, int col,int row){
     printChar(character,col,row,DEFAULT_ATTRIBUTE);
 }
 
+/*prints out a string at given position 
+    (optional: defaults to cursor)
+        and with given VGA attribute 
+    (optional: defaults to 0x0f = white text on black background)
+ */
 void printString(const char* string, int col,int row, char attribute){
     //Memory location of first character
     uint8_t* pChar = (uint8_t*) string;
@@ -82,6 +113,17 @@ void printString(const char* string, int col,int row){
     return;
 }
 
+void printString(const char* string, char attribute){
+    printString(string,-1,-1,attribute);
+    return;
+}
+
+void printString(const char* string){
+    printString(string,-1,-1,DEFAULT_ATTRIBUTE);
+    return;
+}
+
+//clears given row
 void clearRow(int row){
     int col = 0;
 
@@ -90,6 +132,7 @@ void clearRow(int row){
     }
 }
 
+//clears given column
 void clearColumn(int col){
     int row = 0;
 
@@ -98,9 +141,11 @@ void clearColumn(int col){
     }
 }
 
+//clears the entire screen
 void clearScreen(){
     int row = 0;
     for(row;row<MAX_ROWS;row++){
         clearRow(row);
     }
+    setCursor(0);
 }

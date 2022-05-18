@@ -1,4 +1,4 @@
-#include "../utility/typedefs.h"
+#include <stdint-gcc.h>
 
 uint8_t b_in(uint16_t port){
     // A handy C wrapper function that reads a byte from the specified port
