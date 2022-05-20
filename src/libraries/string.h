@@ -15,8 +15,8 @@ const char* lowercase(const char* string);
 const char* tostring(int value, int base);
 const char* hextostring(int value);
 const char* tostring(int value);
-void split(const char* string, char splitter);
 void FreeString(const char* str);
+//TODO const char * *  split(const char* string, char splitter);
 
 
 #endif

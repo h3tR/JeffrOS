@@ -129,6 +129,29 @@ void FreeString(const char* str){
 
 //Similar to Lua's string.split()
 //returns a pointer to the output array
-void split(const char* string, char splitter){
-    //TODO
+
+//TODO
+/*
+const char * * split(const char* string, char splitter){
+    int splittedcounter=0;
+    int i =0;
+    while (string[i]!=0x00)
+    {
+       if(string[i]==splitter) splittedcounter++;
+    }
+    if(splittedcounter==0){
+        const char* array[1] = sizeof()
+        return  array;
+    }
+    const char* * array[splittedcounter];
+    i=0;
+    int cpyfrom;
+    while (string[i]!=0x00)
+    {
+       if(string[i]==splitter){
+
+       }
+    }
+    
 }
+*/
