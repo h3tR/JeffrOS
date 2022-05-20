@@ -2,6 +2,7 @@ bin/
 build/
 logs/
 .vscode/
+Makefile
 *o
 *bin
 *log
