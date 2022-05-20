@@ -7,16 +7,15 @@ The name is a combination of Jeffrey (not my name though) and OS.
 
 ### Contains few basic functionalities:
   - VGA text driver
-  - unfinished string and math library
+  - string and unfinished math library
   - interrupt handling (IRQ's are planned)
+  - Heap memory management
 
 ### Planned features:
-  - A way of debugging
   - Timer driver
   - VGA graphics driver
   - Keyboard driver (PS/2)
   - Disk driver + some file system
-  - Memory management (probably very important but idk what to use it for myself yet)
   - Shell
   - very simple GUI
   
