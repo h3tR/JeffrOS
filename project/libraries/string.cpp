@@ -1,6 +1,8 @@
 #include "../drivers/VGA.h"
 #include <stdint-gcc.h>
 #include "math.h"
+#include "../kernel/Heap.h"
+#include "string.h"
 
 
 //returns the length of given string
@@ -14,10 +16,9 @@ int length(const char* string){
 //concatenates a string and a character
 const char* concat(const char* s1,char character){
     int l1=length(s1);
-    char str[l1];
-    int i=0;
-    for(int j=0;j<l1;j++){
-        str[i] = s1[j];
+    char* str = (char*)malloc(l1+2);
+    for(int i=0;i<l1;i++){
+        str[i] = s1[i];
         i++;
     }
     str[l1] = character;
@@ -27,17 +28,24 @@ const char* concat(const char* s1,char character){
 }
 
 //concatenates two strings
-const char* concat(const char* s1, const char* s2){
-
-   //TODO
-    return s1;
+const char* concat(const char* s1,const char* s2){
+    int l1 = length(s1); int l2=length(s2);
+    char* str = (char*)malloc(l1+l2+1);
+    for(int i=0;i<l1;i++){
+        str[i]=s1[i];
+    }
+    for(int i=0;i<l2;i++){
+        str[l1+i]=s2[i];
+    }
+    str[l1+l2]=0x00;
+    return str;
 }
 
 
 //turns string to uppercase
 const char* uppercase(const char* string){
     int i=0;
-    char charArray[length(string)];
+    char charArray[length(string)+1];
 
     while (string[i]!=0x00)
     {
@@ -55,7 +63,7 @@ const char* uppercase(const char* string){
 //turns string to lowercase
 const char* lowercase(const char* string){
     int i=0;
-    char charArray[length(string)];
+    char charArray[length(string)+1];
 
     while (string[i]!=0x00)
     {
@@ -70,14 +78,7 @@ const char* lowercase(const char* string){
     return string;
 }
 
-//temporary debug function for single digit number display
-const char* stostring(int value){
-    const char numbers[] = "0123456789abcdef";
-    return concat("",numbers[value]);
-}
-
-/*tostring and similar functions do not yet work due 
-to dependance on the unfinished concat() function*/
+//turns given value into a string at given base
 const char* tostring(int value, int base){
     if(value==0){
         return "0";
@@ -91,30 +92,39 @@ const char* tostring(int value, int base){
         nrlen++;
     }
     valcopy = value;
-    const char* string = "";
+    char* string=(char*)malloc((uint32_t)nrlen+1);
+    int j=0;
     for(int i = 0;i<nrlen;i++){
         int worknr = valcopy;
         for(int j = 0;j<nrlen-1-i;j++){
             worknr -=worknr%base;
             worknr /= base;
         }
-        const char* tString = concat(string,numbers[worknr]);
+        string[j]=numbers[worknr];
         valcopy-=worknr*pow(base,nrlen-1-i);
-        string = tString;
+        j++;
+
     }
+    string[nrlen]=0x00;
     return string;
 }
 
-const char* hextostring(int value){
-    return tostring(value, 16);
-}
 
-const char* bintostring(int value){
-    return tostring(value, 2);
+//returns a string of given hexadecimal number with "0x" prefix
+const char* hextostring(int value){
+    const char* orig = tostring(value, 16);
+    const char* string = concat("0x",orig);
+    FreeString(orig);
+    return string;
 }
 
 const char* tostring(int value){
-    return tostring(value, 10);
+    return tostring(value, def);
+}
+
+//Helper function for freeing a String from the stack
+void FreeString(const char* str){
+    FreeMemory((void*)str,(uint32_t)length(str)+1);
 }
 
 //Similar to Lua's string.split()

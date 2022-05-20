@@ -12,12 +12,20 @@
 
 #include <stdint-gcc.h>
 #include "../drivers/portIO.h"
+#include "VGA.h"
+#include "../libraries/string.h"
+#include "../kernel/Heap.h"
 
 //TODO supposed to be part of the upcoming VA graphics library
 void putpixel(int pos_x, int pos_y, unsigned char VGA_COLOR)
 {
     unsigned char* location = (unsigned char*)VIDEO_ADDRESS_GRAPHICS + 320 * pos_y + pos_x;
     *location = VGA_COLOR;
+}
+
+//Character Attribute helper function
+int GenerateAttribute(int bg, int text){
+    return bg*16+text;
 }
 
 uint16_t cursor = 0;
@@ -82,9 +90,18 @@ void printChar(char character, int col,int row, char attribute){
     return;
 }
 
+void printChar(char character, char attribute){
+    printChar(character,-1,-1,attribute);
+}
+
 void printChar(char character, int col,int row){
     printChar(character,col,row,DEFAULT_ATTRIBUTE);
 }
+
+void printChar(char character){
+    printChar(character,-1,-1,DEFAULT_ATTRIBUTE);
+}
+
 
 /*prints out a string at given position 
     (optional: defaults to cursor)
@@ -148,4 +165,27 @@ void clearScreen(){
         clearRow(row);
     }
     setCursor(0);
+}
+
+void printWarning(const char* string, int col,int row){
+    const char* out = concat("Warning: ",string);
+    printString(out,col,row,GenerateAttribute(black,yellow));
+    FreeString(out);
+}
+
+
+void printWarning(const char* string){
+   printWarning(string,-1,-1);
+}
+
+
+void printError(const char* string, int col,int row){
+    const char* out = concat("Error: ",string);
+    printString(out,col,row,GenerateAttribute(black,red));
+    FreeString(out);
+}
+
+
+void printError(const char* string){
+   printError(string,-1,-1);
 }

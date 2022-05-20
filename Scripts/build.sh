@@ -1,4 +1,5 @@
 export PATH=$PATH:/usr/local/i386elfgcc/bin
+
 export BUILD="../build/"
 
 touch "../logs/compile.log"
@@ -31,6 +32,10 @@ touch $BUILD"ISR.o"
 chmod +rwx $BUILD"ISR.o"
 i386-elf-gcc -ffreestanding -m32 -g -c "../project/kernel/interrupts/ISR.cpp" -o $BUILD"ISR.o"
 
+touch $BUILD"Heap.o"
+chmod +rwx $BUILD"Heap.o"
+i386-elf-gcc -ffreestanding -m32 -g -c "../project/kernel/Heap.cpp" -o $BUILD"Heap.o"
+
 
 touch $BUILD"isr.bin"
 chmod +rwx $BUILD"isr.bin"
@@ -43,7 +48,7 @@ echo "Compiling Drivers..."
     i386-elf-gcc -ffreestanding -m32 -g -c "../project/drivers/portIO.cpp" -o $BUILD"portIO.o"
 
     echo "  -VGA"
-    touch "$BUILDVGA.o"
+    touch $BUILD"VGA.o"
     chmod +rwx $BUILD"VGA.o"
     i386-elf-gcc -ffreestanding -m32 -g -c "../project/drivers/VGA.cpp" -o $BUILD"VGA.o"
 
@@ -64,7 +69,7 @@ echo "Compiling Libraries..."
 echo "Linking Kernel..."
 touch $BUILD"kernel.bin"
 chmod +rwx $BUILD"kernel.bin"
-i386-elf-ld -o $BUILD"kernel.bin" -Ttext 0x1000 $BUILD"kernel.o" $BUILD"portIO.o" $BUILD"VGA.o" $BUILD"IDT.o" $BUILD"ISR.o" $BUILD"ISR_asm.o" $BUILD"math.o" $BUILD"string.o" --oformat binary --entry main
+i386-elf-ld -o $BUILD"kernel.bin" -Ttext 0x1000 $BUILD"kernel.o" $BUILD"Heap.o" $BUILD"portIO.o" $BUILD"VGA.o" $BUILD"IDT.o" $BUILD"ISR.o" $BUILD"ISR_asm.o" $BUILD"math.o" $BUILD"string.o" --oformat binary --entry main
 
 echo "Concatenating binaries..."
 cat $BUILD"boot.bin" $BUILD"kernel.bin" $BUILD"padding.bin" > "../bin/JeffrOS.bin"
