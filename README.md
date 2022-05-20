@@ -30,9 +30,4 @@ The name is a combination of Jeffrey (not my name though) and OS.
   - 64-bit implementation
 
 
-I might change the build script to a make file... <br>
-I also might not. <br>
-It might be inefficient but a shell script is good enough for now.
-  
-
 contains some copied code because I am not a good programmer and I want to do as much as I can in high level languages.
