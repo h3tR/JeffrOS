@@ -16,7 +16,7 @@ CPPSRC := $(shell find ./ -name "*.cpp")
 CPPTAR := $(patsubst %.cpp,%.o,$(CPPSRC))
 
 ## Assembly source files that must be compiled to ELF
-ASMSRC:= $(SRC)/asmlibs/ISR_asm.asm 
+ASMSRC:= $(SRC)/kernel/interrupts/Interrupts.asm
 ## Assembly target files
 ASMTAR := $(subst $(SRC), $(BUILD)/src,$(patsubst %.asm, %.o, $(ASMSRC)))
 
@@ -27,6 +27,8 @@ all: prebuild build run
 
 prebuild:	## Prebuild instructions
 	clear
+	rm -rf ./bin
+	mkdir ./bin
 	rm -rf $(BUILD)
 	mkdir $(BUILD)
 

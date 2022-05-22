@@ -33,7 +33,11 @@ typedef struct {
 } __attribute__((packed)) idtr_t;
 
 static idtr_t idtr;
-void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags);
-void idt_init(void);
+void IDT_SetDescriptor(uint8_t vector, uint16_t isr, uint8_t flags);
+void IDT_SetDescriptor(uint8_t vector, uint16_t isr, uint8_t flags, uint8_t sel);
+void IDT_SetDescriptor(uint8_t vector, void* isr, uint8_t flags);
+void IDT_SetDescriptor(uint8_t vector, void* isr, uint8_t flags, uint8_t sel);
+void IDT_EnableGate(int interrupt);
+void IDT_Init();
 
 #endif
