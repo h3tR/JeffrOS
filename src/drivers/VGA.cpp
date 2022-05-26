@@ -48,12 +48,12 @@ returns an array containing:
     the current row at index 1
 */
 void getCursor(int dat[2]){
-    int RealCursor = cursor/2;
+    int RealCursor = cursor;
     int col = RealCursor%MAX_COLS;
     int row = (RealCursor-col)/MAX_COLS;
     dat[0] = col;
     dat[1] = row;
-    return;
+   return;
 }
 
 //sets cursor to given position
@@ -67,7 +67,7 @@ void setCursor(int col, int row) {
         and with given VGA attribute 
     (optional: defaults to 0x0f = white text on black background)
  */
-void printChar(char character, int col,int row, char attribute){
+void printChar(char character, int col, int row, char attribute){
     //video memory pointer
     uint8_t *vidmem = (uint8_t*) VIDEO_ADDRESS;
     uint16_t offset = cursor;
@@ -89,20 +89,6 @@ void printChar(char character, int col,int row, char attribute){
     setCursor(offset);
     return;
 }
-
-void printChar(char character, char attribute){
-    printChar(character,-1,-1,attribute);
-}
-
-void printChar(char character, int col,int row){
-    printChar(character,col,row,DEFAULT_ATTRIBUTE);
-}
-
-void printChar(char character){
-    printChar(character,-1,-1,DEFAULT_ATTRIBUTE);
-}
-
-
 /*prints out a string at given position 
     (optional: defaults to cursor)
         and with given VGA attribute 
@@ -125,20 +111,6 @@ void printString(const char* string, int col,int row, char attribute){
     return;
 }
 
-void printString(const char* string, int col,int row){
-    printString(string,col,row,DEFAULT_ATTRIBUTE);
-    return;
-}
-
-void printString(const char* string, char attribute){
-    printString(string,-1,-1,attribute);
-    return;
-}
-
-void printString(const char* string){
-    printString(string,-1,-1,DEFAULT_ATTRIBUTE);
-    return;
-}
 
 //clears given row
 void clearRow(int row){
@@ -168,24 +140,9 @@ void clearScreen(){
 }
 
 void printWarning(const char* string, int col,int row){
-    const char* out = concat("Warning: ",string);
-    printString(out,col,row,GenerateAttribute(black,yellow));
-    FreeString(out);
+    printString(concat("Warning: ",string),col,row,GenerateAttribute(black,yellow));
 }
-
-
-void printWarning(const char* string){
-   printWarning(string,-1,-1);
-}
-
 
 void printError(const char* string, int col,int row){
-    const char* out = concat("Error: ",string);
-    printString(out,col,row,GenerateAttribute(black,red));
-    FreeString(out);
-}
-
-
-void printError(const char* string){
-   printError(string,-1,-1);
+    printString(concat("Error: ",string),col,row,GenerateAttribute(black,red));
 }

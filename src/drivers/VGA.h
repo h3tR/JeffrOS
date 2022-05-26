@@ -21,26 +21,17 @@ enum VGA_COLOR{
     white=15,
 };
 
-int GenerateAttribute(int bg, int text);
+int GenerateAttribute(int bg=black, int text=white);
 void putpixel(int pos_x, int pos_y, unsigned char VGA_COLOR);
-void setCursor(uint16_t offset);
-void setCursor(int col, int row);
-void printChar(char character, int col,int row, char attribute);
-void printChar(char character, int col,int row);
-void printChar(char character, char attribute);
-void printChar(char character, int col,int row);
-void printChar(char character);
-void printString(const char* string, int col,int row, char attribute);
-void printString(const char* string, int col,int row);
-void printString(const char* string);
-void printString(const char* string, char attribute);
+void setCursor(uint16_t offset=0);
+void setCursor(int col=0, int row=0);
+void printChar(char character, int col=-1,int row=-1, char attribute=0x0f);
+void printString(const char* string, int col=-1,int row=-1, char attribute=0x0f);
 void clearScreen();
 void clearRow(int row);
 void clearColumn(int col);
-void printWarning(const char* string, int col,int row);
-void printWarning(const char* string);
-void printError(const char* string, int col,int row);
-void printError(const char* string);
+void printWarning(const char* string, int col=-1,int row=-1);
+void printError(const char* string, int col=-1,int row=-1);
 
 
 #endif

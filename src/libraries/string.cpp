@@ -38,6 +38,7 @@ const char* concat(const char* s1,const char* s2){
         str[l1+i]=s2[i];
     }
     str[l1+l2]=0x00;
+
     return str;
 }
 
@@ -112,19 +113,13 @@ const char* tostring(int value, int base){
 
 //returns a string of given hexadecimal number with "0x" prefix
 const char* hextostring(int value){
-    const char* orig = tostring(value, 16);
-    const char* string = concat("0x",orig);
-    FreeString(orig);
-    return string;
-}
-
-const char* tostring(int value){
-    return tostring(value, def);
+    return concat("0x",tostring(value, 16));
 }
 
 //Helper function for freeing a String from the stack
 void FreeString(const char* str){
     FreeMemory((void*)str,(uint32_t)length(str)+1);
+    return;
 }
 
 //Similar to Lua's string.split()
